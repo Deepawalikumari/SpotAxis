@@ -36,4 +36,5 @@ router.register(r'site-template-info', GetSiteTemplateViewSet, basename='site-te
 urlpatterns = [
     path('', include(router.urls)),
     path('curricula/first-search/', FirstSearchCurriculaAPIView.as_view(), name='first-search-curricula'),
+
 ]

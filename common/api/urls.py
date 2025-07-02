@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (
+from .views import(
     CountryList, CountryDetail, StateList, StateDetail, MunicipalList, MunicipalDetail,
     CurrencyList, CurrencyDetail, ProfileList, ProfileDetail, UserList, UserDetail,
     AccountVerificationList, AccountVerificationDetail, EmailVerificationList, EmailVerificationDetail,

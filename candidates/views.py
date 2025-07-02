@@ -156,7 +156,8 @@ def record_candidate(request):
 
     # raise ValueError(form_user.errors)
     return render(request,'candidate_registration.html',
-                              {'form_user': form_user})
+                            {'form_user': form_user})
+  
    
 
 

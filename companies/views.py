@@ -45,6 +45,8 @@ from vacancies.views import save_public_application
 regex = re.compile('[^A-Za-z0-9]')
 subdomain_hash = Hashids(salt='TRM Subdomain',min_length=4)
 invite_hash = Hashids(salt='Invitation',min_length=7)
+def is_ajax(request):
+       return request.headers.get('x-requested-with') == 'XMLHttpRequest'
 
 def record_recruiter(request, token=None):
     """
@@ -58,8 +60,8 @@ def record_recruiter(request, token=None):
     """
     context = {}
     context['success'] = False
-    if request.user.is_authenticated():
-        raise Http404
+    #if request.user.is_authenticated:
+    #    raise Http404
     if request.GET:
         slabid = request.GET['price_slab']
         request.session['price_slab'] = slabid
@@ -114,7 +116,7 @@ def record_recruiter(request, token=None):
                 return redirect('common_redirect_after_login')
             request.session['new_email'] = new_user.email
             return redirect(registration_settings.REGISTRATION_REDIRECT)
-            if request.is_ajax():
+            if is_ajax(request):
                 context['success']=True
                 context['msg'] = 'Profile Updated'
                 return JSONResponse(context)
@@ -126,7 +128,7 @@ def record_recruiter(request, token=None):
                 invitation = invitation[0]
             else:
                 invitation = None
-            if request.is_ajax():
+            if is_ajax(request):
                 context['errors'] = form_user.errors;
                 return JSONResponse(context)
     else:
@@ -376,7 +378,7 @@ def recruiter_profile(request):
     if request.method == 'POST':
         form_user = BasicUserDataForm(data=request.POST,files=request.FILES, instance=request.user)
         form_user_photo = UserPhotoForm(data=request.POST,files=request.FILES, instance=request.user)
-        if request.is_ajax():
+        if request.is_ajax(request):
             if form_user.is_valid():
                 form_user.save()
                 context['success'] = True
@@ -391,7 +393,7 @@ def recruiter_profile(request):
             else:
                 messages.error(request, "Image not updated")
 
-        if request.is_ajax():
+        if is_ajax(request):
             return JSONResponse(context)
     else:
         form_user = BasicUserDataForm(instance=request.user)
@@ -474,7 +476,7 @@ def company_profile(request):
                 
             else:
                 context['errors'] = form_company.errors
-            if request.is_ajax():
+            if is_ajax(request):
                 return JSONResponse(context)
     vacancies = Vacancy.objects.filter(company = company)
     for vacancy in vacancies:
@@ -880,7 +882,7 @@ def vacancies_summary(request, vacancy_status_name=None):
     if not subdomain_data['active_subdomain']:
         raise Http404
         # company = get_object_or_404(Company, user=request.user)
-    if request.user.is_authenticated() and request.user.profile.codename == 'recruiter':
+    if request.user.is_authenticated and request.user.profile.codename == 'recruiter':
         try:
             recruiter = Recruiter.objects.get(user=request.user, user__is_active=True)
         except:
@@ -969,7 +971,7 @@ def vacancies_summary(request, vacancy_status_name=None):
                 public_form = save_public_application(request, vacancy, recruiter)
             else:
                 public_form = Public_FilesForm()
-            if request.is_ajax():
+            if request.is_ajax(request):
                 return JsonResponse(context)
         else:
             public_form = Public_FilesForm()
@@ -1576,7 +1578,7 @@ def first_search_curricula(request):
     If the user is authenticated but has no registered email, they are redirected
     to complete their email registration.
     """
-    if request.user.is_authenticated() and not request.user.email:
+    if request.user.is_authenticated and not request.user.email:
         # If the user is logged in and has no email...
         redirect_page = 'common_register_blank_email'
         return redirect(redirect_page)
@@ -1933,7 +1935,7 @@ def widget_jobs(request):
     subdomain_data = subdomain(request)
     if not subdomain_data['active_subdomain']:
         raise Http404
-    if request.user.is_authenticated() and request.user.profile.codename == 'recruiter':
+    if request.user.is_authenticated and request.user.profile.codename == 'recruiter':
         try:
             recruiter = Recruiter.objects.get(user=request.user, user__is_active=True)
         except:

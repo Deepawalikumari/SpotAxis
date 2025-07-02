@@ -167,6 +167,7 @@ class AccountVerificationManager(models.Manager):
                 verification.activation_key = self.model.ACTIVATED
                 verification.save()
 
+
                 return user
 
         return False
@@ -190,8 +191,10 @@ class AccountVerificationManager(models.Manager):
         send_TRM_email(subject_template_name=subject_template_name, email_template_name=email_template_name, context_email=context_email, to_user=new_user.email, bcc=True)
 
     def create_verification(self, user):
-        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        activation_key = hashlib.sha1(salt + str(uuid.uuid4())).hexdigest()
+        salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
+        activation_key = hashlib.sha1((salt + str(uuid.uuid4())).encode('utf-8')).hexdigest()
+        #salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+        #activation_key = hashlib.sha1(salt + str(uuid.uuid4())).hexdigest()
         return self.create(user=user, activation_key=activation_key)
 
     def delete_expired_users(self):

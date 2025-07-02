@@ -55,6 +55,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
+#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL='SpotAxis <noreply@mail.spotaxis.com>'
 SERVER_EMAIL = 'SpotAxis <server@mail.spotaxis.com>'
 

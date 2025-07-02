@@ -1,12 +1,13 @@
 from rest_framework.routers import DefaultRouter
-# from candidates.views import (
-#     CandidateViewSet, ExpertiseViewSet, AcademicViewSet,
+#from candidates.views import (
+#CandidateViewSet, ExpertiseViewSet, AcademicViewSet,
 #     CVLanguageViewSet, TrainingViewSet, CertificateViewSet,
-#     ProjectViewSet, CurriculumViewSet
-# )
+#   ProjectViewSet, CurriculumViewSet
+#)
 
 router = DefaultRouter()
-# router.register(r'candidates', CandidateViewSet)
+
+#router.register(r'candidates', CandidateViewSet)
 # router.register(r'expertises', ExpertiseViewSet)
 # router.register(r'academics', AcademicViewSet)
 # router.register(r'languages', CVLanguageViewSet)

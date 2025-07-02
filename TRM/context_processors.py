@@ -27,6 +27,7 @@ def candidate_full_name(request):
             full_name = '%s %s' % (candidate.first_name, candidate.last_name)
     return {'candidate_full_name': full_name}
 
+
 def logo_company_default(request):
     return {'LOGO_COMPANY_DEFAULT': LOGO_COMPANY_DEFAULT}
 
@@ -82,25 +83,32 @@ def subdomain(request):
         active_host = None
     return {'active_subdomain': slug,'active_host':active_host, 'isRoot':False, 'hasCNAME':hasCNAME}
 
-def user_profile(request):
-    if request.user.is_authenticated:
+"""def user_profile(request):   
+   if request.user.is_authenticated:
         user_profile = request.user.profile.codename
-    else:
+   else:
         user_profile = None
-    try:
+try:
         company = Company.objects.get(subdomain__slug=subdomain(request)['active_subdomain'])
-    except:
+except:
         company=None
-    try:
+try:
         recruiter = Recruiter.objects.get(user=request.user,company=company, user__is_active=True)
-    except:
+except:
         recruiter = None
     # print (recruiter)
     # print(subdomain(request)['active_subdomain'])
     # print ('recruiter')
     #added a new line without mentioning zinnia
-    return {'user_profile': user_profile,'recruiter': recruiter, 'settings':settings}
-    # return {'user_profile': user_profile,'recruiter': recruiter, 'settings':settings, 'zinnia_settings':zinnia_settings}
+    #return {'user_profile': user_profile,'recruiter': recruiter, 'settings':settings}
+    # return {'user_profile': user_profile,'recruiter': recruiter, 'settings':settings, 'zinnia_settings':zinnia_settings}"""
+def user_profile(request):
+    if request.user.is_authenticated:
+        profile = getattr(request.user, 'profile', None)
+        return {'user_profile': profile}
+    return {'user_profile': None}
+
+
 
 def notifications(request):
     if request.user.is_authenticated:

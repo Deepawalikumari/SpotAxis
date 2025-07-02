@@ -20,6 +20,7 @@ from django.contrib.sites.requests import RequestSite
 from TRM.settings import PHOTO_USER_DEFAULT
 from upload_logos.widgets import AjaxClearableFileInput
 
+
 def get_initial_country():
     """
     Retrieves the initial country object for India (ISO code 'IN').

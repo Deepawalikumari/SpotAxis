@@ -296,11 +296,21 @@ def email_change(request):
 
 
 @login_required
-def email_change_requested(request):
-    return render(request, 'email_change_requested.html',
-                  {'email': request.session['new_email'],
-                   'expiration_days': registration_settings.EMAIL_VERIFICATION_DAYS,})
+#def email_change_requested(request):
+#    return render(request, 'email_change_requested.html',
+#                'expiration_days': registration_settings.EMAIL_VERIFICATION_DAYS,})
 
+def email_change_requested(request):
+    new_email = request.session.get('new_email')
+
+    if not new_email:
+        messages.error(request, "No email change was requested or the session has expired.")
+        return redirect('common_email_change')  # ✅ Must return a valid HttpResponse here
+
+    return render(request, 'email_change_requested.html', {
+        'email': new_email,
+        'expiration_days': registration_settings.EMAIL_VERIFICATION_DAYS,
+    })
 
 @login_required
 def email_change_approve(request, token, code):
