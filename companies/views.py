@@ -337,7 +337,7 @@ def edit_company(request):
                     }
                 ]
             post_org_notification(message_chunks = message_chunks, user=[r.user for r in Recruiter.admins.all()], actor=request.user,  action ="updated", subject = "Company Profile", url=company.get_absolute_url())
-            sub_doman.save()
+            sub_domain.save()
             messages.success(request, _('We have modified the information successfully'))
             subscribers = [r.user for r in user.recruiter.fellow_recruiters.all()]
             return redirect('companies_company_profile')
@@ -2026,7 +2026,7 @@ def billing(request):
         else:
             post_payment = False
             plan = request.POST.get('plan',0)
-        user_count = company.recruiter_set.all().count()
+            user_count = company.recruiter_set.all().count()
         if plan:
             slab = PriceSlab.objects.get(id = plan)
         else:

@@ -61,6 +61,7 @@ def payment(request):
         amount_to_pay = 0.00
         slab = None
         company = request.user.recruiter.company.all()[0]
+        company = company[0]
         wallet = company.wallet
         subscription = company.subscription
         current_slab = company.subscription.price_slab

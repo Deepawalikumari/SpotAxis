@@ -19,7 +19,7 @@ from django.template import RequestContext
 from django.contrib.sites.requests import RequestSite
 from TRM.settings import PHOTO_USER_DEFAULT
 from upload_logos.widgets import AjaxClearableFileInput
-
+from django.apps import apps
 
 def get_initial_country():
     """
@@ -943,7 +943,7 @@ class ContactForm(forms.Form):
     the contact form.
 
     """
-    def __init__(self, data=None, files=None, request=None, *args, **kwargs):
+    def __init__(self, data=None, files=None, request=True, *args, **kwargs):
         if request is None:
             raise TypeError("Keyword argument 'request' must be supplied")
         super(ContactForm, self).__init__(data=data, files=files, *args, **kwargs)
@@ -1008,14 +1008,17 @@ class ContactForm(forms.Form):
         """
         if not self.is_valid():
             raise ValueError("Cannot generate Context from invalid contact form")
-        if Site._meta.installed:
+        if apps.is_installed('django.contrib.sites'):
+        #if Site._meta.installed:
             site = Site.objects.get_current()
         else:
             site = RequestSite(self.request)
-        return RequestContext(self.request,
+        """return RequestContext(self.request,
                               dict(self.cleaned_data,
-                                   site=site))
+                                   site=site))"""
+        return dict(self.cleaned_data, site=site)
 
+    
     def get_message_dict(self):
         """
         Generate the various parts of the message and return them in a
@@ -1047,6 +1050,7 @@ class ContactForm(forms.Form):
 
         """
         send_mail(fail_silently=fail_silently, **self.get_message_dict())
+
 ### End Contact Form ###
 #
 #
@@ -1055,7 +1059,7 @@ class EarlyAccessForm(ContactForm):
     def __init__(self, data=None, files=None, request=None, *args, **kwargs):
         super(EarlyAccessForm, self).__init__(request=request, data=data, files=files, *args, **kwargs)
         self.fields['body'].required = False
-
+    
     organization = forms.CharField(max_length=100,
                            label=_('Organization'),
                            widget=forms.TextInput(attrs={'placeholder': _('* Organization'), 'class': "form-control s-form-v3__input"})
